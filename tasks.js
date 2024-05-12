@@ -38,7 +38,7 @@ Array.fromOverwritten = function(arrayLike, mapFn, thisArg){
         }else{
             shallowCopy.push(arrayLike[i])
         }
-        
+
     }
 
     return shallowCopy
@@ -146,17 +146,41 @@ Array.prototype.copyWithinOverwritten = function(target, start, end = this.lengt
 //Parameters -  entries()
 
 Array.prototype.entriesOverwritten = function(){
-    let newArr = []
-    
-    // function* Generator(){
-    //     let start = 0
-    //     let end = this.length - 1
+    let range = {
+        start: 0,
+        end: this.length
+    }
 
-    //     while(start <= end){
+    range[Symbol.iterator] = () => {
+        return({
+            start: this.start,
+            end: this.end,
+            next(){
+                if(this.start < this.end){
+                    return {
+                        value: [this.start++, this[this.start - 1]]
+                    }
+                }else{
+                    return {
+                        done: true
+                    }
+                }
+            }
+        })
+    }
 
-    //     }
-    // }
+    let result = range[Symbol.iterator]()
+    return result
 }
+
+
+// const array = ['a', 'b', 'c'];
+// let res = array.entriesOverwritten()
+// console.log(res.next())
+// console.log(res.next())
+// console.log(res.next())
+
+
 
 
 //7. Logic of Array.prototype.every
@@ -388,7 +412,7 @@ Array.prototype.forEachOverwritten = function(callbackFn, thisArg) {
 // console.log(array.forEachOverwritten((item) => console.log(item)))
 
 
-// 16. Logic of Array.prototype.forEach
+// 16. Logic of Array.prototype.includesOverwritten
 // The includes() method of Array instances determines whether an array includes a certain value among its entries, returning true or false as appropriate.
 // includes(searchElement)
 // includes(searchElement, fromIndex)
@@ -477,7 +501,39 @@ Array.prototype.joinOverwritten = function(separator = ","){
 // parameters - keys()
 
 
+Array.prototype.keysOverwritten = function() {
+    let range = {
+        start: 0,
+        end: this.length
+    }
 
+    range[Symbol.iterator] = () => {
+        return({
+            start: this.start,
+            end: this.end,
+            next(){
+                if(this.start < this.end){
+                    return {
+                        done: false, value: this.start++
+                    }
+                }else{
+                    return {
+                        done: true
+                    }
+                }
+            }
+        })
+    }
+
+    let result = range[Symbol.iterator]()
+    return result
+}
+
+// const array = ['a', 'b', 'c'];
+// let res = array.keysOverwritten()
+// console.log(res.next())
+// console.log(res.next())
+// console.log(res.next())
 
 
 
@@ -689,8 +745,30 @@ Array.prototype.someOverwritten = function(callbackFn, thisArg){
 
 
 
+Array.prototype.sortOverwritten = function(compareFn){
+    if(!compareFn){
+        for(let i = 0; i < this.length; ++i){
+            for(let j = 0; j < this.length - 1 - i; ++j){
+                if(this[j] > this[j + 1]){
+                    [this[j], this[j+1]] = [this[j+1], this[j]]
+                }
+            }
+        }
+    }else{
+        for (let i = 0; i < this.length - 1; ++i) {
+            for (let j = 0; j < this.length - i - 1; ++j) {
+                if (compareFn(this[j], this[j + 1]) > 0) {
+                    [this[j], this[j + 1]] = [this[j + 1], this[j]];
+                }
+            }
+        }
+    }
+
+    return this
+}
 
 
+console.log([2,5,1,3,6].sortOverwritten((a, b) => b-a))
 
 // 29. Logic of Array.prototype.splice
 // The splice() method of Array instances changes the contents of an array by removing or replacing existing elements and/or adding new elements in place.
@@ -699,6 +777,28 @@ Array.prototype.someOverwritten = function(callbackFn, thisArg){
 // splice(start, deleteCount, item1)
 // splice(start, deleteCount, item1, item2)
 // splice(start, deleteCount, item1, item2, /* …, */ itemN)
+
+
+Array.prototype.spliceOverwritten = function(start, deleteCount = 0, ...args){
+    let loopCount = start + deleteCount
+
+    for(let i = 0; i < loopCount; ++i){
+        let elem = 0
+        if(i >= start && elem < deleteCount){   
+            this[i] = args[elem]
+            ++elem
+        }
+    }
+
+    return this
+}
+
+
+// let months = ['Jan', 'March', 'April', 'June'];
+// months.spliceOverwritten(1, 1, 'May');
+// console.log(months);
+// months.spliceOverwritten(4, 1, 'May');
+// console.log(months);
 
 
 
@@ -756,8 +856,47 @@ Array.prototype.unshiftOverwritten = function(...args){
 //usage
 // let array = [1,2,3,4,5]
 // console.log(array.unshiftOverwritten(7,8))
-
+// parameter - values()
 
 
 
 // 32. Logic of Array.prototype.values
+// The values() method of Array instances returns a new array iterator object that iterates the value of each item in the array.
+// Parameters - values()
+
+
+
+
+Array.prototype.valuesOverwritten = function() {
+    let range = {
+        start: 0,
+        end: this.length
+    }
+
+    range[Symbol.iterator] = () => {
+        return({
+            start: this.start,
+            end: this.end,
+            next(){
+                if(this.start < this.end){
+                    return {
+                        done: false, value: this[this.start++]
+                    }
+                }else{
+                    return {
+                        done: true
+                    }
+                }
+            }
+        })
+    }
+
+    let result = range[Symbol.iterator]()
+    return result
+}
+
+// const array = ['a', 'b', 'c'];
+// let res = array.valuesOverwritten()
+// console.log(res.next())
+// console.log(res.next())
+// console.log(res.next())
