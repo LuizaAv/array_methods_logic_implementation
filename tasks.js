@@ -144,33 +144,33 @@ Array.prototype.copyWithinOverwritten = function(target, start, end = this.lengt
 //The entries() method of Array instances returns a new array iterator object that contains the key/value pairs for each index in the array.
 //Parameters -  entries()
 
-// Array.prototype.entriesOverwritten = function(){
-//     let range = {
-//         start: 0,
-//         end: this.length
-//     }
+Array.prototype.entriesOverwritten = function(){
+    let range = {
+        start: 0,
+        end: this.length
+    }
 
-//     range[Symbol.iterator] = () => {
-//         return({
-//             start: this.start,
-//             end: this.end,
-//             next(){
-//                 if(this.start < this.end){
-//                     return {
-//                         value: [this.start++, this[this.start - 1]]
-//                     }
-//                 }else{
-//                     return {
-//                         done: true
-//                     }
-//                 }
-//             }
-//         })
-//     }
+    range[Symbol.iterator] = () => {
+        return({
+            start: this.start,
+            end: this.end,
+            next(){
+                if(this.start < this.end){
+                    return {
+                        value: [this.start++, this[this.start - 1]]
+                    }
+                }else{
+                    return {
+                        done: true
+                    }
+                }
+            }
+        })
+    }
 
-//     let result = range[Symbol.iterator]()
-//     return result
-// }
+    let result = range[Symbol.iterator]()
+    return result
+}
 
 
 // const array = ['a', 'b', 'c'];
