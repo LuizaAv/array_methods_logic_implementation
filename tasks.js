@@ -5,9 +5,8 @@
 Array.prototype.reduceOverwritten = function(callBack, initialValue = this[0]){
     let acc = initialValue === undefined ? this[0] : initialValue
 
-    for(let i = 0; i < this.length; ++i){
+    for(let i = 0 ; i < this.length; ++i){
         acc = callBack(acc, this[i], i, this)
-    
     }
 
     return acc
@@ -16,9 +15,9 @@ Array.prototype.reduceOverwritten = function(callBack, initialValue = this[0]){
 
 //Usage
 
-// let numbersArray = [1,2,5,3,6,9]
+// let numbersArray = [1,2,5,3]
 // let result = numbersArray.reduceOverwritten((accumulator, val, index, array) => {
-//     return accumulator * val
+//     return accumulator + val
 // }, 2)
 // console.log(result)
 
@@ -145,33 +144,33 @@ Array.prototype.copyWithinOverwritten = function(target, start, end = this.lengt
 //The entries() method of Array instances returns a new array iterator object that contains the key/value pairs for each index in the array.
 //Parameters -  entries()
 
-Array.prototype.entriesOverwritten = function(){
-    let range = {
-        start: 0,
-        end: this.length
-    }
+// Array.prototype.entriesOverwritten = function(){
+//     let range = {
+//         start: 0,
+//         end: this.length
+//     }
 
-    range[Symbol.iterator] = () => {
-        return({
-            start: this.start,
-            end: this.end,
-            next(){
-                if(this.start < this.end){
-                    return {
-                        value: [this.start++, this[this.start - 1]]
-                    }
-                }else{
-                    return {
-                        done: true
-                    }
-                }
-            }
-        })
-    }
+//     range[Symbol.iterator] = () => {
+//         return({
+//             start: this.start,
+//             end: this.end,
+//             next(){
+//                 if(this.start < this.end){
+//                     return {
+//                         value: [this.start++, this[this.start - 1]]
+//                     }
+//                 }else{
+//                     return {
+//                         done: true
+//                     }
+//                 }
+//             }
+//         })
+//     }
 
-    let result = range[Symbol.iterator]()
-    return result
-}
+//     let result = range[Symbol.iterator]()
+//     return result
+// }
 
 
 // const array = ['a', 'b', 'c'];
@@ -371,25 +370,22 @@ Array.prototype.findLastIndexOverwritten = function(callbackFn, thisArg){
 // flat(depth)
 
 
-// Array.prototype.flatOverwritten = function(depth){
-//     let newArray = []
+Array.prototype.flatOverwritten = function( depth = 1){
+    let newArray = []
 
-//     let start = 0
-//     do{
-//         if(Array.isArray(this[start])){
-//             newArray.concat(this[start])
-//             start = 0
-//         }else{
-//             newArray.push(this[start])
-//         }
-//         ++start
-//     }while(this[start] !== undefined)
+    for(let i = 0; i < this.length; ++i){
+        if(Array.isArray(this[i]) && depth > 0){
+            newArray.push(...this[i].flatOverwritten( depth - 1))
+        }else{
+            newArray.push(this[i])
+        }
+    }
+   
+    return newArray
+}
 
-//     return newArray
-// }
-
-// const array = [0, 1, [2, [3, [4, 5]]]];
-// console.log(array.flatOverwritten())
+// const array = [0, 1, [2, [3, [4, 5]]],[9,6]];
+// console.log(array.flatOverwritten(Infinity));
 
 
 
